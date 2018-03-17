@@ -1,0 +1,24 @@
+#!/bin/bash
+
+    if [ ! -d ${FINEMAP_JOBSUBDIR} ]; then mkdir ${FINEMAP_JOBSUBDIR}; fi
+    cd ${FINEMAP_JOBSUBDIR}
+
+    for NC in ${NFINEMAP}; do
+        # Run FINEMAP =====================================================================
+        FINEMAP_JOBNAME="finemap_c${NC}_${SIM}_${RANDSTRING}"
+        sed "s|_JOBNAME|${FINEMAP_JOBNAME}|g;
+             s|_SIMDIR_|${THIS_SIMDIR}|g;
+             s|_LD_DIR_|${LDMAPWGHTDIR}|g;
+             s|_NSAMTOT|${NSAMPLE_TOT}|g;
+             s|_NCAUSAL|${NC}|g;
+             s|_USELOCI|${BIGLOCUS}|g;
+             s|_FINEMAP|${FINEMAP}|g;
+            " ${MASTER_BSUBDIR}/finemap.bsub > ${FINEMAP_JOBNAME}.bsub
+        if [ "${bMeta}" = "true" ]; then
+            bsub -w "done(${META_JOBNAME})" < ${FINEMAP_JOBNAME}.bsub
+        else
+            bsub < ${FINEMAP_JOBNAME}.bsub
+        fi
+        # =================================================================================
+    done
+    cd ..

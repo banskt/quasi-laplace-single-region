@@ -1,0 +1,36 @@
+#!/bin/bash
+
+    # Run PIMASS  ======================================================================
+    for MODEL in ${MODEL_PIMASS}; do
+        for NC in ${NPIMASS}; do
+            SPECIFIC_JOBSUBDIR="${THIS_JOBSUBDIR}/${PIMASS_JOBSUBDIR}/pimass_c${NC}_1e6_${MODEL}"
+            if [ -d ${SPECIFIC_JOBSUBDIR} ]; then rm -rf ${SPECIFIC_JOBSUBDIR}; fi
+            mkdir -p ${SPECIFIC_JOBSUBDIR}
+            cd ${SPECIFIC_JOBSUBDIR}
+    
+            while read LOCUSPREFIX; do
+                PIMASS_JOBNAME="pimass_${SIM}_c${NC}_${MODEL}_${LOCUSPREFIX}_${RANDSTRING}"
+                sed -e "s|_JOBNAME|${PIMASS_JOBNAME}|g;
+                        s|_SIMDIR_|${THIS_SIMDIR}|g;
+                        s|_STUDYN_|\"${STUDYNAMES[*]}\"|g;
+                        s|_LOCUSP_|${LOCUSPREFIX}|g;
+                        s|_LOCIDIR|${DOSAGEDIR}|g;
+                        s|_NCAUSAL|${NC}|g;
+                        s|_MODEL__|${MODEL}|g;
+                        s|_USE_COV|${USE_AGESEX}|g;
+                        s|_PIMASS_|${PIMASS}|g;
+                       " ${MASTER_BSUBDIR}/pimass.bsub > ${PIMASS_JOBNAME}.bsub
+                if [ "${bRegCov}" = "true" ]; then
+                    bsub -w "done(${REGRESS_JOBNAME})" < ${PIMASS_JOBNAME}.bsub
+                else
+                    if [ "${bMakePheno}" = "true" ]; then
+                        bsub -w "done(${PHENO_JOBNAME})" < ${PIMASS_JOBNAME}.bsub
+                    else
+                        bsub < ${PIMASS_JOBNAME}.bsub
+                    fi
+                fi
+            done < ${BIGLOCUS}
+            cd ${THIS_JOBSUBDIR}
+        done
+    done
+    # =================================================================================

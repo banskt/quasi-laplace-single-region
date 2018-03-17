@@ -1,0 +1,5 @@
+*.swp
+jobsubs
+.ipynb_checkpoints
+__pycache__
+analysis/posterior_prob/plots

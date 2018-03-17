@@ -1,0 +1,23 @@
+#!/bin/bash
+
+    # Run META ========================================================================
+    if [ ! -d ${SNPTEST_JOBSUBDIR} ]; then mkdir ${SNPTEST_JOBSUBDIR}; fi
+    cd ${SNPTEST_JOBSUBDIR}
+
+    META_JOBNAME="meta_${SIM}_${RANDSTRING}"
+    sed "s|_JOBNAME|${META_JOBNAME}|g;
+         s|_SIMDIR_|${THIS_SIMDIR}|g;
+         s|_STUDYN_|\"${STUDYNAMES[*]}\"|g;
+         s|_SAMPLES|\"${STUDYSAMPLES[*]}\"|g;
+         s|_LOCUSN_|${BIGLOCUS}|g;
+         s|_SCRIPT_|${GENINF}|g;
+         s|__META__|${META}|g;
+        " ${MASTER_BSUBDIR}/meta.bsub > ${META_JOBNAME}.bsub
+    if [ "${bSnptest}" = "true" ]; then
+        bsub -w "done(${SNPTEST_JOBNAME}*)" < ${META_JOBNAME}.bsub
+    else
+        bsub < ${META_JOBNAME}.bsub
+    fi
+
+    cd ${THIS_JOBSUBDIR}
+    # =================================================================================

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+    SPECIFIC_JOBSUBDIR="${THIS_JOBSUBDIR}/${PHENO_JOBSUBDIR}"
+    if [ ! -d ${SPECIFIC_JOBSUBDIR} ]; then mkdir -p ${SPECIFIC_JOBSUBDIR}; fi
+    cd ${SPECIFIC_JOBSUBDIR}
+
+    # Create phenotype ================================================================
+    PHENO_JOBNAME="pheno_${SIM}_${RANDSTRING}"
+    sed -e "s|_JOBNAME|${PHENO_JOBNAME}|g;
+            s|_LOCIDIR|${DOSAGEDIR}|g;
+            s|_SIMDIR_|${THIS_SIMDIR}|g;
+            s|_LOCUSN_|${USELOCI}|g;
+            s|_SCRIPT_|${CREATEPHENO}|g;
+            s|_STUDYN_|\"${STUDYNAMES[*]}\"|g;
+            s|_SAMPLES|\"${STUDYSAMPLES[*]}\"|g;
+            s|_HGSQUR_|${HERITABILITY}|g;
+            s|_SIMTYPE|${PHENO_SIM_TYPE}|g;
+            s|_SO_PRE_|${SAMPLEPREFIX}|g;
+            s|_C_PROP_|${C_PROP}|g;
+            s|_USE_COV|${USE_AGESEX}|g;
+            s|_CC_RAT_|${CASE_CONTROL_RATIO}|g;
+           " ${MASTER_BSUBDIR}/create_phenotype.bsub > ${PHENO_JOBNAME}.bsub
+    bsub < ${PHENO_JOBNAME}.bsub
+    # =================================================================================
+
+    cd ${THIS_JOBSUBDIR}

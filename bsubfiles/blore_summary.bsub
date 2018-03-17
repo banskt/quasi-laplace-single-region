@@ -1,0 +1,38 @@
+#!/bin/sh
+#BSUB -J _JOBNAME
+#BSUB -q mpi
+#BSUB -W 48:00
+#BSUB -o _JOBNAME.out
+#BSUB -e _JOBNAME.err
+#BSUB -n 4
+#BSUB -R span[hosts=1]
+#BSUB -R scratch
+#BSUB -a openmp 
+
+STUDY=_GSTUDY_
+BLORE=_B_LORE_
+SIMDIR=_SIMDIR_
+LOCIDIR=_LOCIDIR
+USELOCI=_USELOCI
+BLORE_DIRNAME=_OUTDIR_
+USE_AGESEX=_USE_COV
+
+SAMPLEFILE="${SIMDIR}/samples/${STUDY}/phenotypes.sample"
+OUTDIR="${SIMDIR}/${BLORE_DIRNAME}/summary_stat/${STUDY}"
+GENODIR="${LOCIDIR}/${STUDY}"
+
+if [ ! -d ${OUTDIR} ]; then
+    mkdir -p ${OUTDIR}
+fi
+
+source $HOME/miniconda3/envs/py35/bin/activate py35
+
+GENOFILES=""
+while read LOCUSPREFIX; do
+    GENOFILES+="${GENODIR}/${LOCUSPREFIX}.gen "
+done < ${USELOCI}
+
+AGESEX_MOD=""
+if [ "${USE_AGESEX}" = "true" ]; then AGESEX_MOD="--cov sex age"; fi
+
+$BLORE --summary --gen ${GENOFILES} --sample ${SAMPLEFILE} --out ${OUTDIR} --reg 0.01 --regoptim ${AGESEX_MOD}

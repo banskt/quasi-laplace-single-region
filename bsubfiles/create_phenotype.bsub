@@ -1,0 +1,52 @@
+#!/bin/sh
+#BSUB -J _JOBNAME
+#BSUB -q mpi-short
+#BSUB -W 2:00
+#BSUB -o _JOBNAME.out
+#BSUB -e _JOBNAME.err
+#BSUB -n 4
+#BSUB -R span[hosts=1]
+#BSUB -R scratch
+#BSUB -a openmp
+
+LOCIDIR=_LOCIDIR
+SIMDIR=_SIMDIR_
+LOCUSNAMES=_LOCUSN_
+CREATEPHENO=_SCRIPT_
+STUDYNAMES=_STUDYN_
+SAMPLES=_SAMPLES
+HG2=_HGSQUR_
+CPROP=_C_PROP_
+SIM_TYPE=_SIMTYPE
+SAMPLEPREFIX=_SO_PRE_
+USE_AGESEX=_USE_COV
+CCRATIO=_CC_RAT_
+
+AGESEX_MOD=""
+if [ "${USE_AGESEX}" = "true" ]; then AGESEX_MOD="--agesex"; fi
+
+source $HOME/miniconda3/envs/py35/bin/activate py35
+python ${CREATEPHENO} -dl ${LOCIDIR} -ds ${SIMDIR} -fl ${LOCUSNAMES} -p ${CPROP} -hg ${HG2} -k 0.5 -st ${STUDYNAMES} -stn ${SAMPLES} -t ${SIM_TYPE} -sp ${SAMPLEPREFIX} -cr ${CCRATIO} ${AGESEX_MOD}
+
+# create the combined phenotype directory and write the header for the combined sample file
+COMBINED_SAMPLEDIR="${SIMDIR}/samples/combined"
+COMBINED_SAMPLEFILE="${COMBINED_SAMPLEDIR}/phenotypes.sample"
+COMBINED_BIMBAMFILE="${COMBINED_SAMPLEDIR}/phenotypes.sample.bimbam"
+COMBINED_COVARIATEFILE="${COMBINED_SAMPLEDIR}/covariates.txt"
+if [ -d ${COMBINED_SAMPLEDIR} ]; then rm -rf ${COMBINED_SAMPLEDIR}; fi
+if [ ! -d ${COMBINED_SAMPLEDIR} ]; then mkdir -p ${COMBINED_SAMPLEDIR}; fi
+
+FIRST_STUDY=`echo ${STUDYNAMES} | awk '{print $1}'`
+head -n 2 ${SIMDIR}/samples/${FIRST_STUDY}/phenotypes.sample > ${COMBINED_SAMPLEFILE}
+
+# convert to BIMBAM format + create combined phenotype
+for STUDY in ${STUDYNAMES}; do
+    SAMPLEFILE="${SIMDIR}/samples/${STUDY}/phenotypes.sample"
+    BIMBAMFILE="${SIMDIR}/samples/${STUDY}/phenotypes.sample.bimbam"
+    COVARIATEFILE="${SIMDIR}/samples/${STUDY}/covariates.txt"
+    tail -n +3 ${SAMPLEFILE} | awk '{print $8}' > ${BIMBAMFILE}
+    tail -n +3 ${SAMPLEFILE} | awk '{print 1, $6, $7}' > ${COVARIATEFILE}
+    tail -n +3 ${SAMPLEFILE} >> ${COMBINED_SAMPLEFILE}
+done
+tail -n +3 ${COMBINED_SAMPLEFILE} | awk '{print $8}' > ${COMBINED_BIMBAMFILE}
+tail -n +3 ${COMBINED_SAMPLEFILE} | awk '{print 1, $6, $7}' > ${COMBINED_COVARIATEFILE}

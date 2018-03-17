@@ -1,0 +1,37 @@
+#!/bin/sh
+#BSUB -J _JOBNAME
+#BSUB -q mpi
+#BSUB -W 48:00
+#BSUB -o _JOBNAME.out
+#BSUB -e _JOBNAME.err
+#BSUB -n 4
+#BSUB -R span[hosts=1]
+#BSUB -R scratch
+#BSUB -a openmp 
+
+SIMDIR=_SIMDIR_
+NZ=_NCAUSAL
+BLORE=_B_LORE_
+STUDYNAMES=_STUDYN_
+MUVAR=_MU_VAR_
+USELOCI=_USELOCI
+BLORE_DIRNAME=_OUTDIR_
+
+OUTDIR="${SIMDIR}/${BLORE_DIRNAME}/meta_without_feature/zmax${NZ}_mu${MUVAR}_pi0.01_sig0.01"
+BLORE_SUMMARY_DIR="${SIMDIR}/${BLORE_DIRNAME}/summary_stat"
+COHORT_PREFIXES=""
+for STUDY in ${STUDYNAMES}; do
+    COHORT_PREFIXES+="${BLORE_SUMMARY_DIR}/${STUDY}/${STUDY}_summary "
+done
+
+if [ ! -d ${OUTDIR} ]; then
+    mkdir -p ${OUTDIR}
+fi
+
+source $HOME/miniconda3/envs/py35/bin/activate py35
+
+if [[ ${MUVAR} == "var" ]]; then 
+    $BLORE --meta --statinfo ${COHORT_PREFIXES} --out ${OUTDIR} --zmax ${NZ} --params 0.01 0 0.01 0.01 --muvar --prefix='blore_meta' 
+elif [[ ${MUVAR} == "0" ]]; then 
+    $BLORE --meta --statinfo ${COHORT_PREFIXES} --out ${OUTDIR} --zmax ${NZ} --params 0.01 0 0.01 0.01 --prefix='blore_meta' 
+fi

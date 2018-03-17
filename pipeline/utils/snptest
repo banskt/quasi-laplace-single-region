@@ -1,0 +1,26 @@
+#!/bin/bash
+
+    # Submit SNPTEST ==================================================================
+    if [ ! -d ${SNPTEST_JOBSUBDIR} ]; then mkdir ${SNPTEST_JOBSUBDIR}; fi
+    cd ${SNPTEST_JOBSUBDIR}
+
+    SNPTEST_JOBNAME="snptest_${SIM}_${RANDSTRING}"
+    for STUDY in ${STUDYNAMES[@]}; do
+        JOBNAME="${SNPTEST_JOBNAME}_${STUDY}"
+        sed "s|_JOBNAME|${JOBNAME}|g;
+             s|_SIMDIR_|${THIS_SIMDIR}|g;
+             s|_GSTUDY_|${STUDY}|g;
+             s|_SNPTEST|${SNPTEST}|g;
+             s|_LOCIDIR|${DOSAGEDIR}|g;
+             s|_USELOCI|${BIGLOCUS}|g;
+             s|_USE_COV|${USE_AGESEX}|g;
+            " ${MASTER_BSUBDIR}/snptest.bsub > ${JOBNAME}.bsub
+        if [ "${bMakePheno}" = "true" ]; then
+            bsub -w "done(${PHENO_JOBNAME})" < ${JOBNAME}.bsub
+        else
+            bsub < ${JOBNAME}.bsub
+        fi
+    done
+
+    cd ${THIS_JOBSUBDIR}
+    # =================================================================================

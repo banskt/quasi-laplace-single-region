@@ -1,0 +1,32 @@
+#!/bin/sh
+#BSUB -J _JOBNAME
+#BSUB -q mpi-short
+#BSUB -W 2:00
+#BSUB -o _JOBNAME.out
+#BSUB -e _JOBNAME.err
+#BSUB -R scratch
+#BSUB -n 1
+
+SIMDIR=_SIMDIR_
+STUDY=_GSTUDY_
+SNPTEST=_SNPTEST
+LOCIDIR=_LOCIDIR
+USELOCI=_USELOCI
+USE_AGESEX=_USE_COV
+
+SAMPLEFILE="${SIMDIR}/samples/${STUDY}/phenotypes.sample"
+OUTDIR="${SIMDIR}/snptest/${STUDY}"
+GENODIR="${LOCIDIR}/${STUDY}"
+AGESEX_MOD=""
+if [ "${USE_AGESEX}" = "true" ]; then AGESEX_MOD="-cov_names sex age -use_raw_covariates"; fi
+
+
+if [ ! -d ${OUTDIR} ]; then
+    mkdir -p ${OUTDIR}
+fi
+
+while read LOCUSPREFIX; do
+    INFILE="${GENODIR}/${LOCUSPREFIX}.gen"
+    OUTFILE="${OUTDIR}/${LOCUSPREFIX}.out"
+    ${SNPTEST} -data ${INFILE} ${SAMPLEFILE} -o ${OUTFILE} -frequentist 1 -pheno pheno -method score ${AGESEX_MOD}
+done < ${USELOCI}

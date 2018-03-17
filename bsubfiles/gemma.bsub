@@ -1,0 +1,46 @@
+#!/bin/sh
+#BSUB -J _JOBNAME
+#BSUB -q mpi
+#BSUB -W 48:00
+#BSUB -o _JOBNAME.out
+#BSUB -e _JOBNAME.err
+#BSUB -R scratch
+#BSUB -R span[hosts=1]
+#BSUB -n 8
+#BSUB -a openmp
+
+module load openblas/dynamic/0.2.18 
+module load gcc/6.3.0
+module load gemma/0.97 ## GEMMA depends on the previous two modules
+
+SIMDIR=_SIMDIR_
+LOCUSPREFIX=_LOCUSP_
+LOCIDIR=_LOCIDIR
+NCAUSAL=_NCAUSAL
+MODEL=_MODEL__
+GEMMA=_GEMMA__
+USE_AGESEX=_USE_COV
+
+GENODIR="${LOCIDIR}/combined"
+OUTDIR="${SIMDIR}/gemma/c${NCAUSAL}_1e6_${MODEL}"
+OUTPREFIX="${LOCUSPREFIX}"
+COMBINED_SAMPLEDIR="${SIMDIR}/samples/combined"
+
+BIMBAM_PHENO="${COMBINED_SAMPLEDIR}/phenotypes.sample.bimbam"
+BIMBAM_GENO="${GENODIR}/${LOCUSPREFIX}.matgen"
+BIMBAM_ANNOT="${GENODIR}/${LOCUSPREFIX}.matmap"
+BSLMM_FLAG="1" # fits a standard linear BSLMM by default
+if [ ${MODEL} == "gblup"  ]; then BSLMM_FLAG="2"; fi
+if [ ${MODEL} == "probit" ]; then BSLMM_FLAG="3"; fi
+if [ "${USE_AGESEX}" = "true" ]; then
+    BSLMM_FLAG="1"
+    BIMBAM_PHENO="${COMBINED_SAMPLEDIR}/phenotypes.sample.bimbam.covreg"
+fi
+
+if [ ! -d ${OUTDIR} ]; then mkdir -p ${OUTDIR}; fi
+
+
+
+echo "Program Start: " `date +%s`
+${GEMMA} -g ${BIMBAM_GENO} -p ${BIMBAM_PHENO} -a ${BIMBAM_ANNOT} -rmin 1 -bslmm ${BSLMM_FLAG} -smax ${NCAUSAL} -outdir ${OUTDIR} -o ${OUTPREFIX} -w 100000 -s 1000000
+echo "Program End: " `date +%s`

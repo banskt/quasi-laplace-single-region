@@ -1,0 +1,18 @@
+#!/bin/bash
+
+    SPECIFIC_JOBSUBDIR="${THIS_JOBSUBDIR}/${PHENO_JOBSUBDIR}"
+    if [ ! -d ${SPECIFIC_JOBSUBDIR} ]; then mkdir -p ${SPECIFIC_JOBSUBDIR}; fi
+    cd ${SPECIFIC_JOBSUBDIR}
+
+    REGRESS_JOBNAME="regress_${SIM}_${RANDSTRING}"
+    sed -e "s|_JOBNAME|${REGRESS_JOBNAME}|g;
+            s|_SIMDIR_|${THIS_SIMDIR}|g;
+            s|_REG_COV|${REGRESS_COVARIATES}|g;
+           " ${MASTER_BSUBDIR}/regress_covariates.bsub > ${REGRESS_JOBNAME}.bsub
+    if [ "${bMakePheno}" = "true" ]; then
+        bsub -w "done(${PHENO_JOBNAME})" < ${REGRESS_JOBNAME}.bsub
+    else
+        bsub < ${REGRESS_JOBNAME}.bsub
+    fi
+
+    cd ${THIS_JOBSUBDIR}

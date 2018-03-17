@@ -1,0 +1,20 @@
+#!/bin/sh
+#BSUB -J _JOBNAME
+#BSUB -q mpi-short
+#BSUB -W 2:00
+#BSUB -o _JOBNAME.out
+#BSUB -e _JOBNAME.err
+#BSUB -n 1
+#BSUB -R scratch
+
+
+SIMDIR=_SIMDIR_
+REGRESS_COVARIATES=_REG_COV
+COMBINED_SAMPLEDIR="${SIMDIR}/samples/combined"
+
+BIMBAM_PHENO="${COMBINED_SAMPLEDIR}/phenotypes.sample.bimbam"
+BIMBAM_COV="${COMBINED_SAMPLEDIR}/covariates.txt"
+BIMBAM_REGRESSED="${COMBINED_SAMPLEDIR}/phenotypes.sample.bimbam.covreg"
+
+source $HOME/miniconda3/envs/py35/bin/activate py35
+python ${REGRESS_COVARIATES} --pheno ${BIMBAM_PHENO} --cov ${BIMBAM_COV} --out ${BIMBAM_REGRESSED}

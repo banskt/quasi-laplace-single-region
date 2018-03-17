@@ -1,0 +1,27 @@
+#!/bin/bash
+
+    # Submit BLORE summary stat =======================================================
+    if [ ! -d ${BLORE_JOBSUBDIR} ]; then mkdir ${BLORE_JOBSUBDIR}; fi
+    cd ${BLORE_JOBSUBDIR}
+
+    BLORE_SUMMARY_JOBNAME="blore_${SIM}_${RANDSTRING}"
+    for STUDY in ${STUDYNAMES[@]}; do
+        JOBNAME="${BLORE_SUMMARY_JOBNAME}_${STUDY}"
+        sed "s|_JOBNAME|${JOBNAME}|g;
+             s|_GSTUDY_|${STUDY}|g;
+             s|_B_LORE_|${BLORE}|g;
+             s|_SIMDIR_|${THIS_SIMDIR}|g;
+             s|_USELOCI|${USELOCI}|g;
+             s|_OUTDIR_|${BLORE_RESDIR}|g;
+             s|_LOCIDIR|${DOSAGEDIR}|g;
+             s|_USE_COV|${USE_AGESEX}|g;
+            " ${MASTER_BSUBDIR}/blore_summary.bsub > ${JOBNAME}.bsub
+        if [ "${bMakePheno}" = "true" ]; then
+            bsub -w "done(${PHENO_JOBNAME})" < ${JOBNAME}.bsub
+        else
+            bsub < ${JOBNAME}.bsub
+        fi
+    done
+
+    cd ${THIS_JOBSUBDIR}
+    # =================================================================================

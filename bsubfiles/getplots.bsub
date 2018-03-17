@@ -1,0 +1,28 @@
+#!/bin/sh
+#BSUB -J _JOBNAME
+#BSUB -q mpi
+#BSUB -W 48:00
+#BSUB -o _JOBNAME.out
+#BSUB -e _JOBNAME.err
+#BSUB -n 8
+#BSUB -R span[hosts=1]
+#BSUB -R scratch
+#BSUB -a openmp
+
+START=_START__
+END=_E_N_D__
+OUTFILE=__OUTF__
+CREDFLAG=__CRED__
+WHICH=_WHICH__
+BASEDIR=_SIMDIR_
+LOCUSFILE=_LOCUSF_
+CMAX=__CMAX__
+WORKDIR=_WORKDIR
+PLOTFILE=_PLT_PIP
+
+CURDIR=`pwd`
+
+cd ${WORKDIR}
+source $HOME/miniconda3/envs/py35/bin/activate py35
+python ${PLOTFILE} --whichplot ${WHICH} --basedir ${BASEDIR} --locusfile ${LOCUSFILE} --outfile ${OUTFILE} --start ${START} --end ${END} --cmax ${CMAX} ${CREDFLAG}
+cd ${CURDIR}
