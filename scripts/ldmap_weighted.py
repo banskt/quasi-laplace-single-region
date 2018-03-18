@@ -104,7 +104,7 @@ for i in range(len(studies)):
 
 ldweighted = ldmod / sum(samples)
 outfilename = os.path.join(outdir, locusprefix + '.LD') 
-np.savetxt(outfilename, ldweighted)
+np.savetxt(outfilename, ldweighted, fmt='%g')
 
 rsidfilename = os.path.join(outdir, locusprefix + '.LD.rsid')
 with open(rsidfilename, 'w') as mfile:

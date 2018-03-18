@@ -1,11 +1,13 @@
 #!/bin/sh
 #BSUB -J _JOBNAME
-#BSUB -q mpi-short
-#BSUB -W 2:00
+#BSUB -q mpi
+#BSUB -W 48:00
 #BSUB -o _JOBNAME.out
 #BSUB -e _JOBNAME.err
-#BSUB -n 1
+#BSUB -n 8
 #BSUB -R scratch
+#BSUB -R span[hosts=1]
+#BSUB -a openmp
 
 SCRIPT=_WGHT_LD
 LOCUSPREFIX=_LOCUSP_

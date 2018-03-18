@@ -9,7 +9,7 @@
     sed -e "s|_JOBNAME|${PHENO_JOBNAME}|g;
             s|_LOCIDIR|${DOSAGEDIR}|g;
             s|_SIMDIR_|${THIS_SIMDIR}|g;
-            s|_LOCUSN_|${USELOCI}|g;
+            s|_LOCUSN_|${BIGLOCUS}|g;
             s|_SCRIPT_|${CREATEPHENO}|g;
             s|_STUDYN_|\"${STUDYNAMES[*]}\"|g;
             s|_SAMPLES|\"${STUDYSAMPLES[*]}\"|g;

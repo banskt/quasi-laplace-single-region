@@ -5,6 +5,9 @@ CURDIR=`pwd`
 # Parameters
 STUDYNAMES=('G1' 'G2' 'G3' 'G4' 'G5')
 STUDYSAMPLES=('2139' '2420' '2472' '2084' '3967')
+OLDIFS=$IFS; IFS="+"
+NSAMPLE_TOT=`echo "${STUDYSAMPLES[*]}" | bc`
+IFS=$OLDIFS
 
 # data directories
 BASEDIR="/scratch/sbanerj/quasi_laplace_single_region"

@@ -22,7 +22,7 @@ GEMMA=_GEMMA__
 USE_AGESEX=_USE_COV
 
 GENODIR="${LOCIDIR}/combined"
-OUTDIR="${SIMDIR}/gemma/c${NCAUSAL}_1e6_${MODEL}"
+OUTDIR="${SIMDIR}/gemma/c${NCAUSAL}_5e6_${MODEL}"
 OUTPREFIX="${LOCUSPREFIX}"
 COMBINED_SAMPLEDIR="${SIMDIR}/samples/combined"
 
@@ -42,5 +42,5 @@ if [ ! -d ${OUTDIR} ]; then mkdir -p ${OUTDIR}; fi
 
 
 echo "Program Start: " `date +%s`
-${GEMMA} -g ${BIMBAM_GENO} -p ${BIMBAM_PHENO} -a ${BIMBAM_ANNOT} -rmin 1 -bslmm ${BSLMM_FLAG} -smax ${NCAUSAL} -outdir ${OUTDIR} -o ${OUTPREFIX} -w 100000 -s 1000000
+${GEMMA} -g ${BIMBAM_GENO} -p ${BIMBAM_PHENO} -a ${BIMBAM_ANNOT} -rmin 1 -bslmm ${BSLMM_FLAG} -smax ${NCAUSAL} -outdir ${OUTDIR} -o ${OUTPREFIX} -w 500000 -s 5000000
 echo "Program End: " `date +%s`

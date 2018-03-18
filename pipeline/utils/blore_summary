@@ -4,14 +4,14 @@
     if [ ! -d ${BLORE_JOBSUBDIR} ]; then mkdir ${BLORE_JOBSUBDIR}; fi
     cd ${BLORE_JOBSUBDIR}
 
-    BLORE_SUMMARY_JOBNAME="blore_${SIM}_${RANDSTRING}"
+    BLORE_SUMMARY_JOBNAME="blore_biglocus_${SIM}_${RANDSTRING}"
     for STUDY in ${STUDYNAMES[@]}; do
         JOBNAME="${BLORE_SUMMARY_JOBNAME}_${STUDY}"
         sed "s|_JOBNAME|${JOBNAME}|g;
              s|_GSTUDY_|${STUDY}|g;
              s|_B_LORE_|${BLORE}|g;
              s|_SIMDIR_|${THIS_SIMDIR}|g;
-             s|_USELOCI|${USELOCI}|g;
+             s|_USELOCI|${BIGLOCUS}|g;
              s|_OUTDIR_|${BLORE_RESDIR}|g;
              s|_LOCIDIR|${DOSAGEDIR}|g;
              s|_USE_COV|${USE_AGESEX}|g;

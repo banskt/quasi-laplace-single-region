@@ -4,9 +4,9 @@ from get_plotvals import LDResult
 
 def read_simres(simdir, key, locusprefixes, causal_rsids, zmax, muvar):
     res = None
-    blore_path   = 'blore/meta_without_feature/zmax{:d}_mu{:s}_pi0.01_sig0.01/blore_meta_res/{:s}.gen.res'
-    probit_path  = 'pimass/c{:d}_1e6_probit/output/{:s}.mcmc.txt'
-    linear_path  = 'pimass/c{:d}_1e6_linear/output/{:s}.mcmc.txt'
+    blore_path   = 'blore_biglocus/meta_without_feature/zmax{:d}_mu{:s}_pi0.01_sig0.01/blore_meta_res/{:s}.gen.res'
+    probit_path  = 'pimass/c{:d}_5e6_probit/output/{:s}.mcmc.txt'
+    linear_path  = 'pimass/c{:d}_5e6_linear/output/{:s}.mcmc.txt'
     finemap_path = 'finemap/c{:d}/{:s}.snp'
     if key == 'blore':   res = blore  (simdir, blore_path,   locusprefixes, causal_rsids, zmax, muvar)
     if key == 'finemap': res = finemap(simdir, finemap_path, locusprefixes, causal_rsids, zmax)
@@ -93,12 +93,17 @@ def finemap(simdir, filepath, locusprefixes, causal_rsids, zmax):
         locusres = list()
         outfile = os.path.join( simdir, filepath.format(zmax, locus))
         causals = causal_rsids[locus]
+        mprobs = list()
         with open(outfile, 'r') as mfile:
             next(mfile)
             for mline in mfile:
                 mlinesplit = mline.split()
                 rsid = mlinesplit[1]
-                prob = float(mlinesplit[3])
+                if mlinesplit[3] != '-inf':
+                    prob = float(mlinesplit[3])
+                    mprobs.append(prob)
+                else:
+                    prob = min(mprobs) - 1.0
                 causality = 1 if rsid in causals else 0
                 mres = LDResult(locus = locus,
                                 rsid = rsid,

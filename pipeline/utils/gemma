@@ -3,7 +3,7 @@
     # Run GEMMA  ======================================================================
     for MODEL in ${MODEL_GEMMA}; do
         for NC in ${NGEMMA}; do
-            SPECIFIC_JOBSUBDIR="${THIS_JOBSUBDIR}/${GEMMA_JOBSUBDIR}/c${NC}_1e6_${MODEL}"
+            SPECIFIC_JOBSUBDIR="${THIS_JOBSUBDIR}/${GEMMA_JOBSUBDIR}/c${NC}_5e6_${MODEL}"
             if [ -d ${SPECIFIC_JOBSUBDIR} ]; then rm -rf ${SPECIFIC_JOBSUBDIR}; fi
             mkdir -p ${SPECIFIC_JOBSUBDIR}
             cd ${SPECIFIC_JOBSUBDIR}

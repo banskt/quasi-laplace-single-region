@@ -6,13 +6,13 @@
     # Run B-LORE meta-analysis ========================================================
     for NC in ${NCAUSAL}; do
         for MU in ${MUVAR}; do
-            BLORE_META_JOBNAME="blore_meta_${SIM}_${NC}_mu${MU}_${RANDSTRING}"
+            BLORE_META_JOBNAME="blore_meta_biglocus_${SIM}_${NC}_mu${MU}_${RANDSTRING}"
             sed "s|_JOBNAME|${BLORE_META_JOBNAME}|g;
                  s|_SIMDIR_|${THIS_SIMDIR}|g;
                  s|_NCAUSAL|${NC}|g;
                  s|_STUDYN_|\"${STUDYNAMES[*]}\"|g;
                  s|_MU_VAR_|${MU}|g;
-                 s|_USELOCI|${USELOCI}|g;
+                 s|_USELOCI|${BIGLOCUS}|g;
                  s|_OUTDIR_|${BLORE_RESDIR}|g;
                  s|_B_LORE_|${BLORE}|g;
                 " ${MASTER_BSUBDIR}/blore_without_features.bsub > ${BLORE_META_JOBNAME}.bsub

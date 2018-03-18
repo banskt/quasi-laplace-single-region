@@ -22,7 +22,7 @@ PIMASS=_PIMASS_
 USE_AGESEX=_USE_COV
 
 GENODIR="${LOCIDIR}/combined"
-OUTDIR="${SIMDIR}/pimass/c${NCAUSAL}_1e6_${MODEL}"
+OUTDIR="${SIMDIR}/pimass/c${NCAUSAL}_5e6_${MODEL}"
 OUTPREFIX="${LOCUSPREFIX}"
 COMBINED_SAMPLEDIR="${SIMDIR}/samples/combined"
 
@@ -42,6 +42,6 @@ if [ ! -d ${OUTDIR} ]; then mkdir -p ${OUTDIR}; fi
 CWD=`pwd`
 cd ${OUTDIR}
 echo "Program Start: " `date +%s`
-$PIMASS -g ${BIMBAM_GENO} -p ${BIMBAM_PHENO} -pos ${BIMBAM_ANNOT} -o ${OUTPREFIX} -w 100000 -s 1000000 -num 100 -smax ${NCAUSAL} ${MODEL_FLAG}
+$PIMASS -g ${BIMBAM_GENO} -p ${BIMBAM_PHENO} -pos ${BIMBAM_ANNOT} -o ${OUTPREFIX} -w 500000 -s 5000000 -num 100 -smax ${NCAUSAL} ${MODEL_FLAG}
 echo "Program End: " `date +%s`
 cd ${CWD}

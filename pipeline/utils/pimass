@@ -3,7 +3,7 @@
     # Run PIMASS  ======================================================================
     for MODEL in ${MODEL_PIMASS}; do
         for NC in ${NPIMASS}; do
-            SPECIFIC_JOBSUBDIR="${THIS_JOBSUBDIR}/${PIMASS_JOBSUBDIR}/pimass_c${NC}_1e6_${MODEL}"
+            SPECIFIC_JOBSUBDIR="${THIS_JOBSUBDIR}/${PIMASS_JOBSUBDIR}/pimass_c${NC}_5e6_${MODEL}"
             if [ -d ${SPECIFIC_JOBSUBDIR} ]; then rm -rf ${SPECIFIC_JOBSUBDIR}; fi
             mkdir -p ${SPECIFIC_JOBSUBDIR}
             cd ${SPECIFIC_JOBSUBDIR}

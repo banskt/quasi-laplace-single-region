@@ -4,7 +4,7 @@ CONFIGFILE=$1
 
 if [ -z ${CONFIGFILE} ] || [ ! -f ${CONFIGFILE} ]; then 
     echo "Fatal! No configuration file found.";
-    echo "Use this script as: ./06_getplots.sh CONFIGFILE"
+    echo "Use this script as: ./07_getplots.sh CONFIGFILE"
     exit 1
 fi
 
@@ -45,7 +45,7 @@ for CRED in ${CREDIBLE}; do
          s|__CRED__|\"${CREDFLAG}\"|g;
          s|_WHICH__|\"${WHICH}\"|g;
          s|_SIMDIR_|${SIMDIR}|g;
-         s|_LOCUSF_|${USELOCI}|g;
+         s|_LOCUSF_|${BIGLOCUS}|g;
          s|__CMAX__|${NCAUSAL}|g;
          s|_WORKDIR|${POSTPROBDIR}|g;
          s|_PLT_PIP|${PLOTPIP}|g;

@@ -181,8 +181,6 @@ def select_causal_snps(studies, snpinfo, snppool, locus, prob):
                 select.append(snp)
         if len(select) > 0:
             none_selected = False
-        #else:
-        #    select = list()
     for snp in select:
         present_in = [study for i, study in enumerate(studies) if snp in snpinfo[i][locus]]
         select[select.index(snp)] = snp._replace(studies = present_in)

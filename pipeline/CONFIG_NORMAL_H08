@@ -1,10 +1,9 @@
 #!/bin/bash
 
-START=61
-END=80
+START=1
+END=50
 HERITABILITY=0.8
-C_PROP=0.005
-NSAMPLE_TOT=13082
+C_PROP=0.02
 PHENO_SIM_TYPE="normal" # fixed, bimodal, studentsT, normal
 CASE_CONTROL_RATIO=1
 USE_AGESEX=false
@@ -28,13 +27,13 @@ bFinemap=false
 bPimass=false
 bGemma=false
 
-#bDeleteOld=true
+## bDeleteOld=true
 bMakePheno=true
-#bRegCov=true
+## bRegCov=true
 bBloreSumm=true
 bBloreMeta=true
 bSnptest=true
 bMeta=true
 bFinemap=true
 bPimass=true
-#bGemma=true
+## bGemma=true
