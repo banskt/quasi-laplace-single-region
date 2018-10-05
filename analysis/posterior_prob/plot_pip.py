@@ -106,7 +106,7 @@ for key in opts.whichplot:
 
 
 
-xlim = [0, int(0.15 * nmax)]
+xlim = [0, int(1.0 * nmax)]
 ylim = [0, 0.9]
 xticks = None
 yticks = np.arange(0.1, 0.9, 0.1)

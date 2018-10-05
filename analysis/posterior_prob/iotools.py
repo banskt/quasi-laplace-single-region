@@ -4,7 +4,7 @@ from get_plotvals import LDResult
 
 def read_simres(simdir, key, locusprefixes, causal_rsids, zmax, muvar):
     res = None
-    blore_path   = 'blore_biglocus/meta_without_feature/zmax{:d}_mu{:s}_pi0.01_sig0.01/blore_meta_res/{:s}.gen.res'
+    blore_path   = 'blore/meta_without_feature/zmax{:d}_mu{:s}_pi0.01_sig0.01/blore_meta_res/{:s}.gen.res'
     probit_path  = 'pimass/c{:d}_5e6_probit/output/{:s}.mcmc.txt'
     linear_path  = 'pimass/c{:d}_5e6_linear/output/{:s}.mcmc.txt'
     finemap_path = 'finemap/c{:d}/{:s}.snp'

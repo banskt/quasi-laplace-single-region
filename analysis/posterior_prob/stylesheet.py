@@ -116,7 +116,7 @@ def save_prcplot(filename, data, xlim, ylim, xticks, yticks):
         
         h, l = ax.get_legend_handles_labels()
         if len(l) > 0:
-            legend = ax.legend(loc='upper right', bbox_to_anchor=(0.98, 0.5),
+            legend = ax.legend(loc='upper left', bbox_to_anchor=(0.02, 0.98),
                                handlelength = 3.0,
                                handletextpad = 2.0,
                                markerscale=5,
